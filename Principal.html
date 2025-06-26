@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="jpg/CENS.jpg" type="image/x-icon">
+  <title>Página Principal</title>
+  <style>
+    body {
+      margin: 0;
+      background-image: url(jpg/Logo2.jpg);
+      background-size: cover;
+      font-family: Arial, sans-serif;
+    }
+
+    .navbar {
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      color: white;
+    }
+
+    .hamburger {
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      color: green;
+      cursor: pointer;
+    }
+
+    .sidebar {
+      height: 100%;
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: -250px;
+      background-color: #00a000;
+      overflow-y: auto;
+      transition: left 0.3s ease;
+      padding-top: 60px;
+      color: white;
+      z-index: 1000;
+    }
+
+    .sidebar.active {
+      left: 0;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+    }
+
+    .sidebar h4,
+    .sidebar h3 {
+      margin-left: 20px;
+      font-size: 14px;
+    }
+
+    .sidebar h3 {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .sidebar ul li {
+      margin: 8px 0;
+    }
+
+    .sidebar ul li a,
+    .sidebar ul li button {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .sidebar ul li a:hover,
+    .sidebar ul li button:hover {
+      text-decoration: underline;
+    }
+
+    .contenido {
+      padding: 20px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .contenido.shifted {
+      margin-left: 250px;
+    }
+
+    @media (max-width: 768px) {
+      .contenido.shifted {
+        margin-left: 0;
+      }
+      .sidebar {
+        width: 80%;
+        left: -80%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar con botón hamburguesa -->
+  <nav class="navbar">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar">☰</button>
+  </nav>
+
+  <!-- Menú lateral -->
+  <div class="sidebar" id="sidebar">
+    <h4>MENÚ</h4>
+    <ul>
+      <li><a href="Principal.html">Inicio</a></li>
+      <li><a href="Configuracion.html">Configuración</a></li>
+      <li><a href="excel.html">Excel</a></li>
+      <li><button onclick="cerrarSesion()">Cerrar sesión</button></li>
+    </ul>
+
+    <h3>CONTRATACIÓN</h3>
+    <ul>
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Seguimiento Compras ARIBA</a></li>
+      <li><a href="#">Seguimiento Compras Menores</a></li>
+    </ul>
+
+    <h3>PRESUPUESTO</h3>
+    <ul>
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Seguimiento Presupuestal</a></li>
+      <li><a href="#">Seguimiento Ejecución</a></li>
+      <li><a href="#">Inversión Infraestructura</a></li>
+      <li><a href="#">Seguimiento Facturación</a></li>
+      <li><a href="#">Seguimiento Indicador</a></li>
+    </ul>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="contenido" id="main-content">
+    <h1>Bienvenido a la página principal</h1>
+    <h2>h</h2>
+    asdasds
+    <p>Aquí podrás subir tu archivo Excel</p>
+    <p>Utiliza el menú lateral para navegar por las diferentes secciones.</p>
+    <p>Para cerrar sesión, haz clic en el botón "Cerrar sesión" en el menú lateral.</p>
+    <p>scdasc</p>
+    asdasds
+    <h1><s>s</s></h1>
+    <h1>h</h1>
+    <h2>d</h2>
+    <h1>Bienvenido a la página principal</h1>
+    <h2>h</h2>
+    asdasds
+    <p>Aquí podrás subir tu archivo Excel</p>
+    <p>Utiliza el menú lateral para navegar por las diferentes secciones.</p>
+    <p>Para cerrar sesión, haz clic en el botón "Cerrar sesión" en el menú lateral.</p>
+    <p>scdasc</p>
+    asdasds
+    <h1><s>s</s></h1>
+    <h1>h</h1>
+    <h2>d</h2>
+    <h1>Bienvenido a la página principal</h1>
+    <h2>h</h2>
+    asdasds
+    <p>Aquí podrás subir tu archivo Excel</p>
+    <p>Utiliza el menú lateral para navegar por las diferentes secciones.</p>
+    <p>Para cerrar sesión, haz clic en el botón "Cerrar sesión" en el menú lateral.</p>
+    <p>scdasc</p>
+    asdasds
+    <h1><s>s</s></h1>
+    <h1>h</h1>
+    <h2>d</h2>
+  </div>
+
+  <!-- Script -->
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const content = document.getElementById("main-content");
+      const hamburger = document.querySelector('.hamburger');
+      
+      sidebar.classList.toggle("active");
+      content.classList.toggle("shifted");
+      document.body.classList.toggle('sidebar-open', sidebar.classList.contains('active'));
+      
+      // Actualizar atributos ARIA
+      const isExpanded = sidebar.classList.contains("active");
+      hamburger.setAttribute('aria-expanded', isExpanded);
+    }
+
+    function cerrarSesion() {
+      sessionStorage.setItem("cerradaSesion", "true");
+      window.location.href = "index.html";
+
+      window.history.pushState(null, "", window.location.href);
+      window.onpopstate = function () {
+        window.history.forward();
+      };
+    }
+
+    // Cerrar menú al hacer clic fuera
+    document.addEventListener('click', function(event) {
+      const sidebar = document.getElementById('sidebar');
+      const hamburger = document.querySelector('.hamburger');
+      
+      if (!sidebar.contains(event.target) && event.target !== hamburger && sidebar.classList.contains('active')) {
+        toggleSidebar();
+      }
+    });
+
+    // Cerrar menú al hacer clic en un enlace
+    document.addEventListener("DOMContentLoaded", function () {
+      const links = document.querySelectorAll(".sidebar a");
+      links.forEach(link => {
+        link.addEventListener("click", () => {
+          const sidebar = document.getElementById("sidebar");
+          if (sidebar.classList.contains("active")) {
+            toggleSidebar();
+          }
+        });
+      });
+    });
+
+    // Redirección si la sesión está cerrada
+    if (sessionStorage.getItem("cerradaSesion") === "true") {
+      window.location.replace("index.html");
+      sessionStorage.removeItem("cerradaSesion");
+    }
+  </script>
+
+</body>
+</html>

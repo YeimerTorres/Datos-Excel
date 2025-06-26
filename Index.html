@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="jpg/CENS.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="style.css" />
+  <title>Inicio de Sesión</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Inicio de sesión</h1>
+    
+    <h2>Usuario</h2>
+    <input type="text" placeholder="Ingrese su correo corporativo" id="usuario" />
+    
+    <h2>Contraseña</h2>
+    <input type="password" placeholder="Ingrese su contraseña" id="contrasena" />
+    
+    <button id="btn">Iniciar sesión</button>
+  </div>
+
+  <!-- Script de validación -->
+  <script>
+    document.getElementById("btn").addEventListener("click", function () {
+      const usuario = document.getElementById("usuario").value.trim();
+      const contrasena = document.getElementById("contrasena").value.trim();
+
+      // Validación de campos vacíos
+      if (usuario === "" || contrasena === "") {
+        alert("Por favor, complete todos los campos.");
+        return;
+      }
+
+      // Validar que el usuario termine en "@cens.com.co"
+      const correoValido = usuario.endsWith("@cens.com.co");
+
+      if (correoValido) {
+        // Guarda sesión y redirige si es un correo corporativo válido
+        sessionStorage.setItem("logueado", "true");
+        window.location.href = "Principal.html";
+      } else {
+        alert("Usuario Incorrecto");
+      }
+    });
+  </script>
+</body>
+</html>
