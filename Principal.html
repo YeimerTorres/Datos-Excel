@@ -13,6 +13,10 @@
       font-family: Arial, sans-serif;
     }
 
+    h1 {
+      text-align: center;
+    }
+
     .navbar {
       padding: 1rem;
       display: flex;
@@ -102,6 +106,37 @@
         left: -80%;
       }
     }
+
+    /* Estilo para los campos en columna */
+    .form-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+  margin-top: 30px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  background-color: #00a000;
+  color: white;
+  font-weight: bold;
+  padding: 8px;
+  font-size: 12px;
+  border: 1px dotted #ccc;
+  margin-bottom: 5px;
+}
+
+.form-select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
   </style>
 </head>
 <body>
@@ -116,15 +151,13 @@
     <h4>MENÚ</h4>
     <ul>
       <li><a href="Principal.html">Inicio</a></li>
-      <li><a href="Configuracion.html">Configuración</a></li>
       <li><a href="excel.html">Excel</a></li>
-      <li><button onclick="cerrarSesion()">Cerrar sesión</button></li>
     </ul>
 
     <h3>CONTRATACIÓN</h3>
     <ul>
       <li><a href="#">Dashboard</a></li>
-      <li><a href="#">Seguimiento Compras ARIBA</a></li>
+      <li><a href="SeguimientoComprasArriba.html">Seguimiento Compras ARIBA</a></li>
       <li><a href="#">Seguimiento Compras Menores</a></li>
     </ul>
 
@@ -136,45 +169,42 @@
       <li><a href="#">Inversión Infraestructura</a></li>
       <li><a href="#">Seguimiento Facturación</a></li>
       <li><a href="#">Seguimiento Indicador</a></li>
+      <li><button onclick="cerrarSesion()" style="font-weight: bold; margin-top: 40px;">CERRAR SESIÓN</button></li>
     </ul>
   </div>
 
   <!-- Contenido principal -->
   <div class="contenido" id="main-content">
     <h1>Bienvenido a la página principal</h1>
-    <h2>h</h2>
-    asdasds
-    <p>Aquí podrás subir tu archivo Excel</p>
-    <p>Utiliza el menú lateral para navegar por las diferentes secciones.</p>
-    <p>Para cerrar sesión, haz clic en el botón "Cerrar sesión" en el menú lateral.</p>
-    <p>scdasc</p>
-    asdasds
-    <h1><s>s</s></h1>
-    <h1>h</h1>
-    <h2>d</h2>
-    <h1>Bienvenido a la página principal</h1>
-    <h2>h</h2>
-    asdasds
-    <p>Aquí podrás subir tu archivo Excel</p>
-    <p>Utiliza el menú lateral para navegar por las diferentes secciones.</p>
-    <p>Para cerrar sesión, haz clic en el botón "Cerrar sesión" en el menú lateral.</p>
-    <p>scdasc</p>
-    asdasds
-    <h1><s>s</s></h1>
-    <h1>h</h1>
-    <h2>d</h2>
-    <h1>Bienvenido a la página principal</h1>
-    <h2>h</h2>
-    asdasds
-    <p>Aquí podrás subir tu archivo Excel</p>
-    <p>Utiliza el menú lateral para navegar por las diferentes secciones.</p>
-    <p>Para cerrar sesión, haz clic en el botón "Cerrar sesión" en el menú lateral.</p>
-    <p>scdasc</p>
-    asdasds
-    <h1><s>s</s></h1>
-    <h1>h</h1>
-    <h2>d</h2>
+    <p>aca podras</p>
+
+    <!-- Campos en columna -->
+    <div class="form-vertical">
+  <div class="form-row">
+    <label class="form-label">VIGENCIA:</label>
+    <select class="form-select">
+      <option>Seleccione</option>
+    </select>
   </div>
+  <div class="form-row">
+    <label class="form-label">ESTADO:</label>
+    <select class="form-select">
+      <option>Seleccione estado</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label class="form-label">REQUIRIDORA ADMINISTRATIVA:</label>
+    <select class="form-select">
+      <option>Seleccione requeridora</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label class="form-label">OBJETO CONTRACTUAL:</label>
+    <select class="form-select">
+      <option>Seleccione objeto</option>
+    </select>
+  </div>
+</div>
 
   <!-- Script -->
   <script>
@@ -182,12 +212,11 @@
       const sidebar = document.getElementById("sidebar");
       const content = document.getElementById("main-content");
       const hamburger = document.querySelector('.hamburger');
-      
+
       sidebar.classList.toggle("active");
       content.classList.toggle("shifted");
       document.body.classList.toggle('sidebar-open', sidebar.classList.contains('active'));
-      
-      // Actualizar atributos ARIA
+
       const isExpanded = sidebar.classList.contains("active");
       hamburger.setAttribute('aria-expanded', isExpanded);
     }
@@ -202,17 +231,15 @@
       };
     }
 
-    // Cerrar menú al hacer clic fuera
     document.addEventListener('click', function(event) {
       const sidebar = document.getElementById('sidebar');
       const hamburger = document.querySelector('.hamburger');
-      
+
       if (!sidebar.contains(event.target) && event.target !== hamburger && sidebar.classList.contains('active')) {
         toggleSidebar();
       }
     });
 
-    // Cerrar menú al hacer clic en un enlace
     document.addEventListener("DOMContentLoaded", function () {
       const links = document.querySelectorAll(".sidebar a");
       links.forEach(link => {
@@ -225,7 +252,6 @@
       });
     });
 
-    // Redirección si la sesión está cerrada
     if (sessionStorage.getItem("cerradaSesion") === "true") {
       window.location.replace("index.html");
       sessionStorage.removeItem("cerradaSesion");

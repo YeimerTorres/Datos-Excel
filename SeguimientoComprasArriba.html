@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="jpg/CENS.jpg" type="image/x-icon">
+  <title>Seguimiento Compras ARIBA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: white;
+    }
+    .titulo {
+      font-weight: bold;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    td, th {
+      border: 1px solid #ccc;
+      padding: 8px;
+      font-size: 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .verde-header {
+      background-color: #00a651;
+      color: white;
+      font-weight: bold;
+    }
+    .naranja {
+      background-color: orange;
+    }
+    .sin-borde {
+      border: none;
+    }
+    .sin-borde td {
+      border: none;
+    }
+    .sin-borde input {
+      border: none;
+      width: 100%;
+    }
+    .cronograma-header th {
+      background-color: #00a651;
+      color: white;
+      text-align: center;
+    }
+    .cronograma-subheader th {
+      background-color: #00a651;
+      color: white;
+      font-size: 13px;
+      text-align: center;
+    }
+    .gris {
+      background-color: #f0f0f0;
+    }
+    .icono {
+      text-align: center;
+    }
+    .texto-tarea {
+      padding-left: 15px;
+    }
+    select, textarea, input[type="text"] {
+      width: 100%;
+      font-size: 14px;
+    }
+  </style>
+  <script>
+    function actualizarTodo() {
+      const vigencia = document.getElementById("vigencia").value;
+      const requeridoraSelect = document.getElementById("requeridora");
+      const estadoSelect = document.getElementById("estado");
+      const objetoContainer = document.getElementById("objetoContainer");
+
+      requeridoraSelect.innerHTML = '';
+      estadoSelect.innerHTML = '';
+      objetoContainer.innerHTML = '';
+
+      if (vigencia === "2024") {
+        agregarOpciones(requeridoraSelect, ["Oney Viviana Bustos Cañas"]);
+        agregarOpciones(estadoSelect, ["En trámite Requeridor"]);
+        actualizarObjetoContractual();
+      } else if (vigencia === "2025") {
+        agregarOpciones(requeridoraSelect, [
+          "Ana Carina Quintero Carrascal",
+          "Karol Daniela Florez Garcia",
+          "Oney Viviana Bustos Cañas"
+        ]);
+        agregarOpciones(estadoSelect, ["En trámite Requeridor", "Cancelado"]);
+        actualizarObjetoContractual();
+      }
+    }
+
+    function agregarOpciones(selectElement, opciones) {
+      const emptyOption = document.createElement("option");
+      emptyOption.value = "";
+      emptyOption.text = "Seleccione";
+      selectElement.appendChild(emptyOption);
+
+      opciones.forEach(op => {
+        const option = document.createElement("option");
+        option.value = op;
+        option.text = op;
+        selectElement.appendChild(option);
+      });
+    }
+
+    function actualizarObjetoContractual() {
+      const vigencia = document.getElementById("vigencia").value;
+      const requeridora = document.getElementById("requeridora").value;
+      const estado = document.getElementById("estado").value;
+      const contenedor = document.getElementById("objetoContainer");
+
+      contenedor.innerHTML = "";
+
+      const select = document.createElement("select");
+      select.style.width = '100%';
+
+      if (vigencia === "2024" && requeridora === "Oney Viviana Bustos Cañas" && estado === "En trámite Requeridor") {
+        select.innerHTML = `<option>SUMINISTRO DE MATERIALES ELÉCTRICOS</option>`;
+      } else if (vigencia === "2025") {
+        if (requeridora === "Oney Viviana Bustos Cañas") {
+          if (estado === "En trámite Requeridor") {
+            select.innerHTML = `
+              <option>MANTENIMIENTO PREDICTIVO, PREVENTIVO Y CORRECTIVO DE PLANTAS ELÉCTRICAS DE EMERGENCIA.</option>
+              <option>SUMINISTRO SISTEMA DE PUESTA A TIERRA</option>
+              <option>SUMINISTRO CONECTORES</option>`;
+          } else if (estado === "Cancelado") {
+            select.innerHTML = `
+              <option>MANTENIMIENTO PREDICTIVO Y PREVENTIVO EN LOS SISTEMAS DE SERVICIOS AUXILIARES DE LAS SUBESTACIONES DE CENS (Modificación No. 1) - 12/11/2025 a Mayo/2026</option>
+              <option>SUMINISTRO DE MATERIALES ELÉCTRICOS PARA LÍNEAS DE TRANSMISIÓN</option>`;
+          }
+        } else if (requeridora === "Ana Carina Quintero Carrascal" && estado === "En trámite Requeridor") {
+          select.innerHTML = `
+            <option>SERVICIO PARA LA CERTIFICACIÓN DE CONFORMIDAD CON EL REGLAMENTO TÉCNICO DE INSTALACIONES ELÉCTRICAS – RETIE PARA LAS SUBESTACIONES DE CENS S.A. E.S.P.</option>
+            <option>SUMINISTRO TABLEROS DE MEDIDA, CONTROL Y EQUIPOS SERVICIOS AUXILIARES PARA SUBESTACIONES</option>
+            <option>SERVICIO DE ACTIVIDADES TÉCNICAS Y ADMINISTRATIVAS PARA EL DESARROLLO DE PROYECTOS Y MANTENIMIENTO DEL SISTEMA TYD DE LA SUBGERENCIA DE SUBESTACIONES Y LÍNEAS.</option>
+            <option>SUMINISTRO DE TRANSFORMADORES PARA INSTALACIÓN DE RECONECTADORES</option>
+            <option>EJECUCIÓN DE PRUEBAS A LOS ACEITES DIELÉCTRICOS DE LOS TRANSFORMADORES DE CENS SA ESP.</option>
+            <option>EJECUCIÓN DE ACTIVIDADES PARA CONTINGENCIA CONTINUIDAD Y RECUPERACIÓN DE TRANSFORMADORES DE POTENCIA</option>
+            <option>SUMINISTRO HERRAMIENTAS MANUALES</option>`;
+        }
+      }
+      if (select.innerHTML !== '') contenedor.appendChild(select);
+    }
+  </script>
+</head>
+<body>
+
+  <div class="titulo">📋 Seguimiento Compras ARIBA</div>
+
+  <!-- Tabla de encabezado -->
+  <table class="sin-borde">
+    <tr>
+      <td class="verde-header">VIGENCIA:</td>
+      <td>
+        <select id="vigencia" onchange="actualizarTodo()">
+          <option value="">Seleccione</option>
+          <option>2020</option>
+          <option>2021</option>
+          <option>2022</option>
+          <option>2023</option>
+          <option>2024</option>
+          <option>2025</option>
+          <option>2026</option>
+          <option>2027</option>
+          <option>2028</option>
+          <option>2029</option>
+          <option>2030</option>
+          <option>2031</option>
+          <option>2032</option>
+          <option>2033</option>
+          <option>2034</option>
+          <option>2035</option>
+          <option>2036</option>
+        </select>
+      </td>
+      <td class="verde-header">REQUERIDORA ADMINISTRATIVA:</td>
+      <td>
+        <select id="requeridora" onchange="actualizarObjetoContractual()">
+          <option value="">Seleccione vigencia</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td class="verde-header">ESTADO:</td>
+      <td>
+        <select id="estado" onchange="actualizarObjetoContractual()">
+          <option value="">Seleccione requeridora</option>
+        </select>
+      </td>
+      <td class="verde-header">OBJETO CONTRACTUAL:</td>
+      <td id="objetoContainer"></td>
+    </tr>
+  </table>
+
+  <!-- Tabla del cronograma -->
+  <table>
+    <tr class="cronograma-header">
+      <th>No. PROCESO</th>
+      <input type="text">
+      <th>CONOCEDOR TÉCNICO</th>
+      <th>NEGOCIADOR</th>
+      <th>VIGENCIA FUTURA</th>
+      <th>EQUIPO DE TRABAJO</th>
+    </tr>
+    <tr class="cronograma-subheader">
+      <th colspan="2">CRONOGRAMA INICIAL (Planeado)</th>
+      <th colspan="2">CRONOGRAMA EJECUCIÓN (Real)</th>
+      <th>No. Días (Retraso)</th>
+    </tr>
+    <tr><td colspan="5" class="texto-tarea">Entrega información preliminar por parte del conocedor técnico</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Asignación del proceso por parte del Profesional P1 – Gestión Administrativa</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Revisión de documentos iniciales por parte del técnico de soporte</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Definir Especificaciones Técnicas_Finales</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Diligenciar formato de Investigación de mercado, solicitar sondeos y recibir respuestas</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Cargar la documentación soporte en el aplicativo ARIBA</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Revisar y/o aprobar Estudios Previos por parte del negociador_1 Revisión</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Revisar y/o aprobar Estudios Previos por parte del negociador_2 Revisión</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Publicar en Te Cuento (Aviso Informativo)</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Publicar el proceso en Te Cuento, en el módulo “Abiertos”</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Descargar y evaluar las ofertas</td></tr>
+    <tr><td colspan="5" class="texto-tarea">Firmar Comunicación de Aceptación</td></tr>
+    <tr><td colspan="5" class="naranja texto-tarea">Fecha estimada de formalización o aceptación de oferta:</td></tr>
+  </table>
+
+  <!-- Seguimiento -->
+  <table>
+    <tr>
+      <td class="naranja"><strong>DESDE:</strong> miércoles, 1 de enero de 2025</td>
+      <td class="naranja"><strong>HASTA:</strong> martes, 17 de junio de 2025</td>
+    </tr>
+  </table>
+
+  <table>
+    <tr class="cronograma-header">
+      <th>TAREA</th>
+      <th>RESPONSABLE</th>
+      <th>FECHA REAL DE CUMPLIMIENTO</th>
+      <th>OBSERVACIONES</th>
+    </tr>
+    <tr><td colspan="4" style="height: 200px;"></td></tr>
+  </table>
+
+</body>
+</html>
