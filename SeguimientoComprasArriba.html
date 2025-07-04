@@ -6,71 +6,138 @@
   <title>Seguimiento Compras ARIBA</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       margin: 30px;
       background-color: white;
     }
+
     .titulo {
       font-weight: bold;
       font-size: 22px;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-bottom: 30px;
+
+    .formulario {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 900px;
     }
-    td, th {
-      border: 1px solid #ccc;
-      padding: 8px;
-      font-size: 14px;
-      text-align: left;
-      vertical-align: top;
+
+    .fila-doble {
+      display: flex;
+      gap: 15px;
     }
-    .verde-header {
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .campo label {
       background-color: #00a651;
       color: white;
       font-weight: bold;
+      padding: 8px;
+      font-size: 13px;
+      margin-bottom: 5px;
     }
-    .naranja {
-      background-color: orange;
-    }
-    .sin-borde {
-      border: none;
-    }
-    .sin-borde td {
-      border: none;
-    }
-    .sin-borde input {
-      border: none;
+
+    select, input[type="date"], input[type="text"] {
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
       width: 100%;
     }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 30px;
+      table-layout: fixed;
+    }
+
+    td, th {
+      border: 1px solid #333;
+      padding: 0;
+      font-size: 14px;
+      height: 40px;
+    }
+
     .cronograma-header th {
       background-color: #00a651;
       color: white;
       text-align: center;
+      padding: 8px;
     }
-    .cronograma-subheader th {
-      background-color: #00a651;
+
+    .naranja {
+      background-color: orange;
       color: white;
-      font-size: 13px;
-      text-align: center;
+      font-weight: bold;
     }
-    .gris {
+
+    .input-tabla {
+      width: 100%;
+      height: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border: none;
+      box-sizing: border-box;
+    }
+
+    .input-tabla:focus {
+      outline: none;
       background-color: #f0f0f0;
     }
-    .icono {
-      text-align: center;
+
+    .tarea {
+      text-align: left;
+      padding-left: 10px;
     }
-    .texto-tarea {
-      padding-left: 15px;
+    
+    .separador {
+      border-top: 2px solid #333;
+      height: 10px;
     }
-    select, textarea, input[type="text"] {
+    
+    .fecha-estimada {
       width: 100%;
-      font-size: 14px;
+      text-align: center;
+      font-weight: bold;
     }
+    
+    .fecha-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    /* Ajustes específicos para columnas */
+    .col-proceso { width: 20%; }
+    .col-conocedor { width: 20%; }
+    .col-negociador { width: 20%; }
+    .col-vigencia { width: 20%; }
+    .col-equipo { width: 20%; }
+    .col-tarea { width: 50%; }
+    .col-cronograma { width: 25%; }
+    .col-dias { width: 25%; }
   </style>
+
   <script>
+    function validarFechas() {
+      const desde = document.getElementById("desde").value;
+      const hasta = document.getElementById("hasta");
+      hasta.min = desde;
+
+      if (hasta.value && hasta.value < desde) {
+        hasta.value = "";
+        alert("La fecha HASTA no puede ser menor que la fecha DESDE.");
+      }
+    }
+
     function actualizarTodo() {
       const vigencia = document.getElementById("vigencia").value;
       const requeridoraSelect = document.getElementById("requeridora");
@@ -79,22 +146,52 @@
 
       requeridoraSelect.innerHTML = '';
       estadoSelect.innerHTML = '';
+      estadoSelect.disabled = true;
       objetoContainer.innerHTML = '';
 
       if (vigencia === "2024") {
         agregarOpciones(requeridoraSelect, ["Oney Viviana Bustos Cañas"]);
-        agregarOpciones(estadoSelect, ["En trámite Requeridor"]);
-        actualizarObjetoContractual();
       } else if (vigencia === "2025") {
         agregarOpciones(requeridoraSelect, [
           "Ana Carina Quintero Carrascal",
           "Karol Daniela Florez Garcia",
           "Oney Viviana Bustos Cañas"
         ]);
-        agregarOpciones(estadoSelect, ["En trámite Requeridor", "Cancelado"]);
-        actualizarObjetoContractual();
       }
     }
+
+    function actualizarEstado() {
+  const estadoSelect = document.getElementById("estado");
+  const requeridora = document.getElementById("requeridora").value;
+  estadoSelect.innerHTML = '';
+  estadoSelect.disabled = true;
+
+  if (requeridora !== "") {
+    const vigencia = document.getElementById("vigencia").value;
+    let opciones = [];
+
+    if (vigencia === "2024") {
+      opciones = ["En trámite Requeridor"];
+    } else if (vigencia === "2025") {
+      if (requeridora === "Oney Viviana Bustos Cañas") {
+        opciones = ["En trámite Requeridor", "Cancelado"];
+      } else if (requeridora === "Ana Carina Quintero Carrascal") {
+        opciones = ["En trámite Requeridor", "Devuelto", "Vencido"];
+      }
+      else if (requeridora === "Karol Daniela Florez Garcia") {
+        opciones = ["En trámite Requeridor", "Devuelto", "Cancelado"];
+      }
+    }
+
+    if (opciones.length > 0) {
+      agregarOpciones(estadoSelect, opciones);
+      estadoSelect.disabled = false;
+    }
+  }
+
+  actualizarObjetoContractual();
+}
+
 
     function agregarOpciones(selectElement, opciones) {
       const emptyOption = document.createElement("option");
@@ -117,135 +214,324 @@
       const contenedor = document.getElementById("objetoContainer");
 
       contenedor.innerHTML = "";
-
       const select = document.createElement("select");
       select.style.width = '100%';
 
       if (vigencia === "2024" && requeridora === "Oney Viviana Bustos Cañas" && estado === "En trámite Requeridor") {
-        select.innerHTML = `<option>SUMINISTRO DE MATERIALES ELÉCTRICOS</option>`;
+        select.innerHTML = '<option>SUMINISTRO DE MATERIALES ELÉCTRICOS</option>';
       } else if (vigencia === "2025") {
         if (requeridora === "Oney Viviana Bustos Cañas") {
           if (estado === "En trámite Requeridor") {
-            select.innerHTML = `
-              <option>MANTENIMIENTO PREDICTIVO, PREVENTIVO Y CORRECTIVO DE PLANTAS ELÉCTRICAS DE EMERGENCIA.</option>
-              <option>SUMINISTRO SISTEMA DE PUESTA A TIERRA</option>
-              <option>SUMINISTRO CONECTORES</option>`;
+            select.innerHTML = 
+              '<option>MANTENIMIENTO PREDICTIVO, PREVENTIVO Y CORRECTIVO DE PLANTAS ELÉCTRICAS DE EMERGENCIA.</option>' +
+              '<option>SUMINISTRO SISTEMA DE PUESTA A TIERRA</option>' +
+              '<option>SUMINISTRO CONECTORES</option>';
           } else if (estado === "Cancelado") {
-            select.innerHTML = `
-              <option>MANTENIMIENTO PREDICTIVO Y PREVENTIVO EN LOS SISTEMAS DE SERVICIOS AUXILIARES DE LAS SUBESTACIONES DE CENS (Modificación No. 1) - 12/11/2025 a Mayo/2026</option>
-              <option>SUMINISTRO DE MATERIALES ELÉCTRICOS PARA LÍNEAS DE TRANSMISIÓN</option>`;
+            select.innerHTML = 
+              '<option>MANTENIMIENTO PREDICTIVO Y PREVENTIVO EN LOS SISTEMAS DE SERVICIOS AUXILIARES DE LAS SUBESTACIONES DE CENS</option>' +
+              '<option>SUMINISTRO DE MATERIALES ELÉCTRICOS PARA LÍNEAS DE TRANSMISIÓN</option>';
           }
         } else if (requeridora === "Ana Carina Quintero Carrascal" && estado === "En trámite Requeridor") {
-          select.innerHTML = `
-            <option>SERVICIO PARA LA CERTIFICACIÓN DE CONFORMIDAD CON EL REGLAMENTO TÉCNICO DE INSTALACIONES ELÉCTRICAS – RETIE PARA LAS SUBESTACIONES DE CENS S.A. E.S.P.</option>
-            <option>SUMINISTRO TABLEROS DE MEDIDA, CONTROL Y EQUIPOS SERVICIOS AUXILIARES PARA SUBESTACIONES</option>
-            <option>SERVICIO DE ACTIVIDADES TÉCNICAS Y ADMINISTRATIVAS PARA EL DESARROLLO DE PROYECTOS Y MANTENIMIENTO DEL SISTEMA TYD DE LA SUBGERENCIA DE SUBESTACIONES Y LÍNEAS.</option>
-            <option>SUMINISTRO DE TRANSFORMADORES PARA INSTALACIÓN DE RECONECTADORES</option>
-            <option>EJECUCIÓN DE PRUEBAS A LOS ACEITES DIELÉCTRICOS DE LOS TRANSFORMADORES DE CENS SA ESP.</option>
-            <option>EJECUCIÓN DE ACTIVIDADES PARA CONTINGENCIA CONTINUIDAD Y RECUPERACIÓN DE TRANSFORMADORES DE POTENCIA</option>
-            <option>SUMINISTRO HERRAMIENTAS MANUALES</option>`;
+          select.innerHTML = 
+            '<option>SERVICIO PARA LA CERTIFICACIÓN DE CONFORMIDAD CON RETIE</option>' +
+            '<option>SUMINISTRO TABLEROS DE MEDIDA Y CONTROL</option>' +
+            '<option>ACTIVIDADES TÉCNICAS PARA PROYECTOS Y MANTENIMIENTO TYD</option>' +
+            '<option>SUMINISTRO DE TRANSFORMADORES PARA RECONECTADORES</option>' +
+            '<option>PRUEBAS A ACEITES DIELÉCTRICOS</option>' +
+            '<option>CONTINGENCIA Y RECUPERACIÓN DE TRANSFORMADORES</option>' +
+            '<option>SUMINISTRO HERRAMIENTAS MANUALES</option>';
+        }
+
+        else if (requeridora === "Ana Carina Quintero Carrascal" && estado === "Vencido") {
+          select.innerHTML = 
+            '<option>MANTENIMIENTO, INSTALACIÓN O REPOSICIÓN DE ACTIVOS Y COMPONENTES A EQUIPOS ESPECIALES COMO RECONECTADORES, SWICHES, INTERRUPTORES, REGULADORES DE LAS REDES DE DISTRIBUCIÓN CON NIVELES DE TENSIÓN DE 13.2 Y 34.5 KV </option>';
+        }
+
+        else if (requeridora === "Ana Carina Quintero Carrascal" && estado === "Cancelado") {
+          select.innerHTML = 
+            '<option>SUMINISTRO DE MATERIALES ELÉCTRICOS PARA LÍNEAS DE TRANSMISIÓN</option>' +
+            '<option>SUMINISTRO DE MATERIALES ELÉCTRICOS PARA SUBESTACIONES</option>';
+        }
+
+        else if (requeridora === "Karol Daniela Florez Garcia" && estado === "En trámite Requeridor") {
+          select.innerHTML = 
+            '<option>SUMINISTROS DE EQUIPOS DE POTENCIA PARA SUBESTACIONES</option>' +
+            '<option>COMPRAVENTA DE CELDA DE SALIDA SIMOPRIME</option>' +
+            '<option>SUMINISTRO DE EQUIPOS Y ELEMENTOS DE TRABAJO CON TENSIÓN TÉCNICA POTENCIAL</option>' +
+            '<option>SERVICIO DE DIAGNOSTICO MANTENIMIENTO Y REPARACIÓN CARGADOR PARA BANCO DE BATERÍAS</option>' +
+            '<option>COMPRAVENTA DE EQUIPOS Y ACCESORIOS PARA PRUEBAS ELECTRICAS</option>' +
+            '<option>MANTENIMIENTO PREVENTIVO Y SUMINISTRO DE REPUESTOS ASOCIADOS A BAHÍAS COMPACTAS PASS M0 SBB </option>' +
+            '<option>SUMINISTRO DE MATERIALES, INSUMOS Y REPUESTOS ELÉCTRICOS PARA MANTENIMIENTO PREVENTIVO DE SUBESTACIONES</option>';
+        }
+
+        else if (requeridora === "Karol Daniela Florez Garcia" && estado === "Devuelto") {
+          select.innerHTML = 
+            '<option>SERVICIO DESMANTELAMIENTO DE CONDUCTORES LINEA DE ALTA TENSIÓN</option>' +
+            '<option>OBRAS CIVILES PARA LA ADECUACION Y REFORZAMIENTO ESTRUCTURAL DEL EDIFICIO SUBESTACIÓN SEVILLA</option>';
+        }
+
+        else if (requeridora === "Karol Daniela Florez Garcia" && estado === "Cancelado") {
+          select.innerHTML = 
+            '<option>SUMINISTRO DE MATERIALES, INSUMOS Y REPUESTOS ELÉCTRICOS PARA MANTENIMIENTO PREVENTIVO DE SUBESTACIONES.</option>'
         }
       }
+
       if (select.innerHTML !== '') contenedor.appendChild(select);
+    }
+    if (!sessionStorage.getItem("usuarioLogueado")) {
+      window.location.replace("index.html");
     }
   </script>
 </head>
 <body>
-
   <div class="titulo">📋 Seguimiento Compras ARIBA</div>
 
-  <!-- Tabla de encabezado -->
-  <table class="sin-borde">
-    <tr>
-      <td class="verde-header">VIGENCIA:</td>
-      <td>
+  <div class="formulario">
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="vigencia">VIGENCIA:</label>
         <select id="vigencia" onchange="actualizarTodo()">
           <option value="">Seleccione</option>
-          <option>2020</option>
-          <option>2021</option>
-          <option>2022</option>
-          <option>2023</option>
           <option>2024</option>
           <option>2025</option>
           <option>2026</option>
-          <option>2027</option>
-          <option>2028</option>
-          <option>2029</option>
-          <option>2030</option>
-          <option>2031</option>
-          <option>2032</option>
-          <option>2033</option>
-          <option>2034</option>
-          <option>2035</option>
-          <option>2036</option>
         </select>
-      </td>
-      <td class="verde-header">REQUERIDORA ADMINISTRATIVA:</td>
-      <td>
-        <select id="requeridora" onchange="actualizarObjetoContractual()">
-          <option value="">Seleccione vigencia</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td class="verde-header">ESTADO:</td>
-      <td>
-        <select id="estado" onchange="actualizarObjetoContractual()">
+      </div>
+      <div class="campo">
+        <label for="desde">DESDE:</label>
+        <input type="date" id="desde" onchange="validarFechas()" />
+      </div>
+    </div>
+
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="requeridora">REQUERIDORA ADMINISTRATIVA:</label>
+        <select id="requeridora" onchange="actualizarEstado()">
           <option value="">Seleccione requeridora</option>
         </select>
-      </td>
-      <td class="verde-header">OBJETO CONTRACTUAL:</td>
-      <td id="objetoContainer"></td>
-    </tr>
-  </table>
+      </div>
+      <div class="campo">
+        <label for="hasta">HASTA:</label>
+        <input type="date" id="hasta" onchange="validarFechas()" />
+      </div>
+    </div>
 
-  <!-- Tabla del cronograma -->
-  <table>
+    <div class="campo">
+      <label for="estado">ESTADO:</label>
+      <select id="estado" onchange="actualizarObjetoContractual()" disabled>
+        <option value="">Seleccione estado</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="objeto">OBJETO CONTRACTUAL:</label>
+      <div id="objetoContainer"></div>
+    </div>
+  </div>
+
+  <table class="tabla-separada">
+    <colgroup>
+      <col class="col-proceso">
+      <col class="col-conocedor">
+      <col class="col-negociador">
+      <col class="col-vigencia">
+      <col class="col-equipo">
+    </colgroup>
     <tr class="cronograma-header">
       <th>No. PROCESO</th>
-      <input type="text">
       <th>CONOCEDOR TÉCNICO</th>
       <th>NEGOCIADOR</th>
       <th>VIGENCIA FUTURA</th>
       <th>EQUIPO DE TRABAJO</th>
     </tr>
-    <tr class="cronograma-subheader">
-      <th colspan="2">CRONOGRAMA INICIAL (Planeado)</th>
-      <th colspan="2">CRONOGRAMA EJECUCIÓN (Real)</th>
+    <tr>
+      <td><input class="input-tabla" type="text" ></td>
+      <td><input class="input-tabla" type="text" ></td>
+      <td><input class="input-tabla" type="text" ></td>
+      <td><input class="input-tabla" type="text" ></td>
+      <td><input class="input-tabla" type="text" ></td>
+    </tr>
+  </table>
+
+  <div class="separador"></div>
+
+  <table class="tabla-separada">
+    <colgroup>
+      <col class="col-tarea">
+      <col class="col-cronograma">
+      <col class="col-cronograma">
+      <col class="col-dias">
+    </colgroup>
+    <tr class="cronograma-header">
+      <th colspan="4">CRONOGRAMA</th>
+    </tr>
+    <tr class="cronograma-header">
+      <th>TAREA</th>
+      <th>CRONOGRAMA INICIAL (Planeado)</th>
+      <th>CRONOGRAMA EJECUCIÓN (Real)</th>
       <th>No. Días (Retraso)</th>
     </tr>
-    <tr><td colspan="5" class="texto-tarea">Entrega información preliminar por parte del conocedor técnico</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Asignación del proceso por parte del Profesional P1 – Gestión Administrativa</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Revisión de documentos iniciales por parte del técnico de soporte</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Definir Especificaciones Técnicas_Finales</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Diligenciar formato de Investigación de mercado, solicitar sondeos y recibir respuestas</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Cargar la documentación soporte en el aplicativo ARIBA</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Revisar y/o aprobar Estudios Previos por parte del negociador_1 Revisión</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Revisar y/o aprobar Estudios Previos por parte del negociador_2 Revisión</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Publicar en Te Cuento (Aviso Informativo)</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Publicar el proceso en Te Cuento, en el módulo “Abiertos”</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Descargar y evaluar las ofertas</td></tr>
-    <tr><td colspan="5" class="texto-tarea">Firmar Comunicación de Aceptación</td></tr>
-    <tr><td colspan="5" class="naranja texto-tarea">Fecha estimada de formalización o aceptación de oferta:</td></tr>
-  </table>
-
-  <!-- Seguimiento -->
-  <table>
     <tr>
-      <td class="naranja"><strong>DESDE:</strong> miércoles, 1 de enero de 2025</td>
-      <td class="naranja"><strong>HASTA:</strong> martes, 17 de junio de 2025</td>
+      <td class="tarea">Entrega información preliminar por parte del conocedor técnico:</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Asignación del proceso por parte del Profesional P1 - Gestión Administrativa</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Revisión de documentos iniciales por parte del tecnólogo de soporte:</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Definir Especificaciones Técnicas, Finales</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Diligenciar formato de investigación de mercado, solicitar sondeos y recibir respuesta</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Cargar la documentación soporte del proceso en el aplicativo ARIBA</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Revisar y/o aprobar Estudios Previos por parte del negociador_1 Revisión</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Revisar y/o aprobar Estudios Previos por parte del negociador_2 Revisión</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Publicar en Te Cuento (Aviso Informativo)</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Publicar el proceso en Te Cuento, en el módulo "Abiertos"</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Descargar y evaluar las ofertas</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td class="tarea">Firmar Comunicación de Aceptación</td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td colspan="4" class="naranja">
+        <div class="fecha-container">
+          <span>Fecha estimada de formalización o aceptación de oferta:</span>
+          <span>
+            
+            <input type="text"style="width: 150px; text-align: center; border: none; background: transparent; color: white;">
+          </span>
+        </div>
+      </td>
     </tr>
   </table>
 
-  <table>
+  <div class="titulo" style="margin-top: 40px;">📌 Seguimiento</div>
+
+  <table class="tabla-separada" style="margin-bottom: 30px;">
     <tr class="cronograma-header">
       <th>TAREA</th>
       <th>RESPONSABLE</th>
       <th>FECHA REAL DE CUMPLIMIENTO</th>
       <th>OBSERVACIONES</th>
     </tr>
-    <tr><td colspan="4" style="height: 200px;"></td></tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
+    <tr>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+      <td><input class="input-tabla" type="text"></td>
+    </tr>
   </table>
-
+  
 </body>
 </html>

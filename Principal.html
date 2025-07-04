@@ -10,6 +10,7 @@
       margin: 0;
       background-image: url(jpg/Logo2.jpg);
       background-size: cover;
+      background-repeat: no-repeat;
       font-family: Arial, sans-serif;
     }
 
@@ -106,40 +107,18 @@
         left: -80%;
       }
     }
-
-    /* Estilo para los campos en columna */
-    .form-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-width: 400px;
-  margin-top: 30px;
-}
-
-.form-row {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-label {
-  background-color: #00a000;
-  color: white;
-  font-weight: bold;
-  padding: 8px;
-  font-size: 12px;
-  border: 1px dotted #ccc;
-  margin-bottom: 5px;
-}
-
-.form-select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
+    
   </style>
 </head>
 <body>
+
+  <!-- Validación de sesión -->
+  <script>
+    // Si no hay una sesión activa, redirigir al formulario de inicio (index.html)
+    if (!sessionStorage.getItem("usuarioLogueado")) {
+      window.location.replace("index.html");
+    }
+  </script>
 
   <!-- Navbar con botón hamburguesa -->
   <nav class="navbar">
@@ -148,13 +127,10 @@
 
   <!-- Menú lateral -->
   <div class="sidebar" id="sidebar">
-    <h4>MENÚ</h4>
-    <ul>
-      <li><a href="Principal.html">Inicio</a></li>
-      <li><a href="excel.html">Excel</a></li>
-    </ul>
+    <h4 style="text-align: center;">MENÚ</h4>
+    <ul></ul>
 
-    <h3>CONTRATACIÓN</h3>
+    <h3 style="margin-top: 35px;">CONTRATACIÓN</h3>
     <ul>
       <li><a href="#">Dashboard</a></li>
       <li><a href="SeguimientoComprasArriba.html">Seguimiento Compras ARIBA</a></li>
@@ -176,37 +152,11 @@
   <!-- Contenido principal -->
   <div class="contenido" id="main-content">
     <h1>Bienvenido a la página principal</h1>
-    <p>aca podras</p>
+    <p>Aca podrás gestionar tus módulos de seguimiento de compras y presupuesto.</p>
+    <p>Utiliza el menú lateral para navegar entre las secciones.</p>
+  </div>
 
-    <!-- Campos en columna -->
-    <div class="form-vertical">
-  <div class="form-row">
-    <label class="form-label">VIGENCIA:</label>
-    <select class="form-select">
-      <option>Seleccione</option>
-    </select>
-  </div>
-  <div class="form-row">
-    <label class="form-label">ESTADO:</label>
-    <select class="form-select">
-      <option>Seleccione estado</option>
-    </select>
-  </div>
-  <div class="form-row">
-    <label class="form-label">REQUIRIDORA ADMINISTRATIVA:</label>
-    <select class="form-select">
-      <option>Seleccione requeridora</option>
-    </select>
-  </div>
-  <div class="form-row">
-    <label class="form-label">OBJETO CONTRACTUAL:</label>
-    <select class="form-select">
-      <option>Seleccione objeto</option>
-    </select>
-  </div>
-</div>
-
-  <!-- Script -->
+  <!-- Scripts -->
   <script>
     function toggleSidebar() {
       const sidebar = document.getElementById("sidebar");
@@ -222,13 +172,11 @@
     }
 
     function cerrarSesion() {
+      sessionStorage.removeItem("usuarioLogueado");
       sessionStorage.setItem("cerradaSesion", "true");
       window.location.href = "index.html";
 
-      window.history.pushState(null, "", window.location.href);
-      window.onpopstate = function () {
-        window.history.forward();
-      };
+
     }
 
     document.addEventListener('click', function(event) {
@@ -252,10 +200,7 @@
       });
     });
 
-    if (sessionStorage.getItem("cerradaSesion") === "true") {
-      window.location.replace("index.html");
-      sessionStorage.removeItem("cerradaSesion");
-    }
+    
   </script>
 
 </body>
